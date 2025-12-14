@@ -1,2 +1,2 @@
 go clean -cache -testcache
-go build -ldflags "-w -s" main.go ^
+go build -a -ldflags "-w -s" main.go ^

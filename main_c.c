@@ -39,7 +39,8 @@ void Wineventproc(
 bool StretchBltToMemDC();
 int GetPixelDataFromMemDC();
 bool BitBltToWindowDC();
-void DrawCharacter(wchar_t *c, int x, int y, RGBQUAD *p);
+void DrawCharacter(wchar_t *c, int x, int y, int rgb);
+void DrawPixel(int x, int y, int rgb);
 RGBQUAD *GetColorFromBuffer(RGBQUAD *b, int index);
 
 // call init before any of the other functions in this file
@@ -62,15 +63,18 @@ int init()
     HMONITOR hmon = MonitorFromWindow(GetForegroundWindow(),
                         MONITOR_DEFAULTTONEAREST);
 
+    myWidth = 500;
+    myHeight = 500;
+
     hwnd =  CreateWindowEx(
                 0,
                 CLASS_NAME,
                 L"ASCII Screen",
-                WS_POPUP | WS_MAXIMIZE | WS_VISIBLE,
+                WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE,
                 0,
                 0,
-                500,
-                500,
+                myWidth,
+                myHeight,
                 NULL,       // Parent window    
                 NULL,       // Menu
                 hInstance,  // Instance handle
@@ -90,18 +94,18 @@ int init()
     //set Background Color
     SelectObject(hdcMemDC, CreateSolidBrush(BACKGROUND_COLOR));
 
-    // This is the best stretch mode.
-    SetStretchBltMode(hMyDC, HALFTONE);
-    SetStretchBltMode(hdcMemDC, HALFTONE);
+    // // This is the best stretch mode.
+    // SetStretchBltMode(hMyDC, HALFTONE);
+    // SetStretchBltMode(hdcMemDC, HALFTONE);
 
-	bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
-	bmi.bmiHeader.biWidth = myWidth;
-	bmi.bmiHeader.biHeight = -myHeight;  // negative sets origin in top left
-	bmi.bmiHeader.biPlanes = 1;
-	bmi.bmiHeader.biBitCount = 32;
-	bmi.bmiHeader.biCompression = BI_RGB;
+	// bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
+	// bmi.bmiHeader.biWidth = myWidth;
+	// bmi.bmiHeader.biHeight = -myHeight;  // negative sets origin in top left
+	// bmi.bmiHeader.biPlanes = 1;
+	// bmi.bmiHeader.biBitCount = 32;
+	// bmi.bmiHeader.biCompression = BI_RGB;
 
-	pPixels = (RGBQUAD*) malloc(myWidth * myHeight * sizeof(RGBQUAD));
+	// pPixels = (RGBQUAD*) malloc(myWidth * myHeight * sizeof(RGBQUAD));
 
 	readyToDraw = true;
 
@@ -156,9 +160,9 @@ bool BitBltToWindowDC()
         SRCCOPY);
 }
 
-void DrawCharacter(wchar_t *c, int x, int y, RGBQUAD *p)
+void DrawCharacter(wchar_t *c, int x, int y, int rgb)
 {
-	SetTextColor(hdcMemDC, RGB(p->rgbRed, p->rgbGreen, p->rgbBlue));
+	SetTextColor(hdcMemDC, TRANSPARENT_COLOR);
 	ExtTextOutW(hdcMemDC, x, y, ETO_OPAQUE, NULL, c, 1, NULL);
 }
 
@@ -166,7 +170,6 @@ void DrawCharacter(wchar_t *c, int x, int y, RGBQUAD *p)
 void DrawPixel(int x, int y, int rgb)
 {
     // draw to buffer DC and when done bit blt to window
-
     SetPixel(
         hdcMemDC,
         x,
