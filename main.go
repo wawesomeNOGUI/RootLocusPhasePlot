@@ -1,15 +1,24 @@
 package main
 
+// #cgo  LDFLAGS: -lgdi32
+/*
+#include "main_c.c"
+*/
+import "C"
+
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strconv"
+	"time"
 )
 
 var poles []complex128
 var zeros []complex128
+var numCPU int = runtime.NumCPU()
 
-func main() {
+func getInputLoopTransferFunction(poles, zeros *[]complex128) {
 	// get input poles and zeroes of the loop transfer function
 	if len(os.Args) <= 1 {
 		fmt.Println("ERROR: input args in format e.g.: p 0.5 1+2i (1-2i) z 1i 2 -5")
@@ -44,12 +53,32 @@ func main() {
 
 		// else must have gotten a correct number format so store in respective slices
 		if p {
-			poles = append(poles, cmplx)
+			*poles = append(*poles, cmplx)
 		} else {
-			zeros = append(zeros, cmplx)
+			*zeros = append(*zeros, cmplx)
 		}
 	}
+}
 
-	fmt.Println("Poles: ", poles)
-	fmt.Println("Zeros: ", zeros)
+func main() {
+	go func() {
+		for {
+			time.Sleep(time.Millisecond)
+			if C.readyToDraw {
+				break
+			}
+		}
+
+		fmt.Println("Number of CPU Logical Processors: ", numCPU)
+
+		// user should input poles and zeros as command arguments when running program
+		getInputLoopTransferFunction(&poles, &zeros)
+
+		fmt.Println("Poles: ", poles)
+		fmt.Println("Zeros: ", zeros)
+
+		C.DrawPixel(5, 5, 0xFF00FF)
+	}()
+
+	C.init()
 }
