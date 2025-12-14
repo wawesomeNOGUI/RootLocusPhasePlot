@@ -174,7 +174,7 @@ void DrawPixel(int x, int y, int rgb)
         hdcMemDC,
         x,
         y,
-        RGB(rgb & 0xFF0000, rgb & 0x00FF00, rgb & 0x0000FF)
+        RGB((rgb & 0xFF0000) >> 16, (rgb & 0x00FF00) >> 8, rgb & 0x0000FF)
     );
 }
 

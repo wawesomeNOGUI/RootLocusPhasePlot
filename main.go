@@ -62,7 +62,7 @@ func getInputLoopTransferFunction(poles, zeros []complex128) {
 
 func drawPhasePlot(poles, zeros []complex128) {
 	for i := C.int(0); i < 500; i++ {
-		C.DrawPixel(i, i, 0xFF00FF)
+		C.DrawPixel(i, i, i*5)
 	}
 }
 
