@@ -170,8 +170,9 @@ void DrawCharacter(wchar_t *c, int x, int y, int rgb)
 void DrawPixel(int x, int y, int rgb)
 {
     // draw to buffer DC and when done bit blt to window
+    // hdcMemDC
     SetPixel(
-        hdcMemDC,
+        hMyDC,
         x,
         y,
         RGB((rgb & 0xFF0000) >> 16, (rgb & 0x00FF00) >> 8, rgb & 0x0000FF)
