@@ -79,10 +79,10 @@ func drawPhasePlot(poles, zeros []complex128) {
 	// so will limit the bounds of the plane for now to -2 to 2
 	const windowWidth = 500
 	const windowHeight = 500
-	const leftBound = -5
-	const rightBound = 5
-	const upperBound = 5
-	const lowerBound = -5
+	const leftBound = -2
+	const rightBound = 2
+	const upperBound = 2
+	const lowerBound = -2
 	for i := float64(leftBound); i < rightBound; i += (-leftBound + rightBound) / float64(windowWidth) {
 		for j := float64(lowerBound); j < upperBound; j += (-lowerBound + upperBound) / float64(windowHeight) {
 			w := loopTransferFunction(complex(i, j), poles, zeros)
