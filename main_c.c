@@ -10,7 +10,7 @@
 // character(s) to draw on screen
 const char charString[] = "GAMER";
 
-// length of charString will be set by strlen(charString) in main
+// length of charString can be set by strlen(charString) in main
 const int CHARS = strlen(charString); 
 
 const COLORREF TRANSPARENT_COLOR = RGB(0, 0, 0);
@@ -94,19 +94,6 @@ int init()
     //set Background Color
     SelectObject(hdcMemDC, CreateSolidBrush(BACKGROUND_COLOR));
 
-    // // This is the best stretch mode.
-    // SetStretchBltMode(hMyDC, HALFTONE);
-    // SetStretchBltMode(hdcMemDC, HALFTONE);
-
-	// bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
-	// bmi.bmiHeader.biWidth = myWidth;
-	// bmi.bmiHeader.biHeight = -myHeight;  // negative sets origin in top left
-	// bmi.bmiHeader.biPlanes = 1;
-	// bmi.bmiHeader.biBitCount = 32;
-	// bmi.bmiHeader.biCompression = BI_RGB;
-
-	// pPixels = (RGBQUAD*) malloc(myWidth * myHeight * sizeof(RGBQUAD));
-
 	readyToDraw = true;
 
     // Run the message and update loop.
@@ -169,8 +156,9 @@ void DrawCharacter(wchar_t *c, int x, int y, int rgb)
 // rgb integer should have form 0xFFFFFF
 void DrawPixel(int x, int y, int rgb)
 {
-    // draw to buffer DC and when done bit blt to window
-    // hdcMemDC
+    // if draw to buffer DC then when done bit blt to window
+    // buffer DC is: hdcMemDC
+    // right now this is drawing directly to the visible window: hMyDC
     SetPixel(
         hMyDC,
         x,
